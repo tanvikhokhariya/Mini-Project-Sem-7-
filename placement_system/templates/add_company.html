@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="POST">
+  <div class="mb-3">
+    <label>Company Name:</label>
+    <input type="text" name="name" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label>Position:</label>
+    <input type="text" name="position" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label>Package (LPA):</label>
+    <input type="number" step="0.1" name="package" class="form-control">
+  </div>
+  <button type="submit" class="btn btn-primary">Add Company</button>
+</form>
+{% endblock %}

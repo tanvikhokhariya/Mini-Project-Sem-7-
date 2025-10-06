@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">Placement Records</h2>
+
+<form method="GET" class="row g-3 mb-4">
+  <div class="col-md-3">
+    <input type="text" name="name" class="form-control" placeholder="Student Name" value="{{ request.args.name }}">
+  </div>
+  <div class="col-md-2">
+    <input type="text" name="branch" class="form-control" placeholder="Branch" value="{{ request.args.branch }}">
+  </div>
+  <div class="col-md-2">
+    <input type="number" name="year" class="form-control" placeholder="Year" value="{{ request.args.year }}">
+  </div>
+  <div class="col-md-3">
+    <input type="text" name="company" class="form-control" placeholder="Company" value="{{ request.args.company }}">
+  </div>
+  <div class="col-md-2">
+    <select name="placed" class="form-select">
+      <option value="">All</option>
+      <option value="unplaced" {% if request.args.placed=='unplaced' %}selected{% endif %}>Unplaced Only</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <select name="sort_by" class="form-select">
+      <option value="">Sort By</option>
+      <option value="package" {% if request.args.sort_by=='package' %}selected{% endif %}>Highest Package</option>
+      <option value="company" {% if request.args.sort_by=='company' %}selected{% endif %}>Company Name</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button type="submit" class="btn btn-primary w-100">Filter</button>
+  </div>
+</form>
+
+<div class="mb-3 d-flex gap-2">
+  <form method="get" action="{{ url_for('export_placements') }}">
+    <input type="hidden" name="name" value="{{ request.args.name }}">
+    <input type="hidden" name="branch" value="{{ request.args.branch }}">
+    <input type="hidden" name="year" value="{{ request.args.year }}">
+    <input type="hidden" name="company" value="{{ request.args.company }}">
+    <input type="hidden" name="placed" value="{{ request.args.placed }}">
+    <input type="hidden" name="sort_by" value="{{ request.args.sort_by }}">
+    <button type="submit" class="btn btn-success">Export to CSV</button>
+  </form>
+  <form method="get" action="{{ url_for('export_placements') }}">
+    <input type="hidden" name="name" value="{{ request.args.name }}">
+    <input type="hidden" name="branch" value="{{ request.args.branch }}">
+    <input type="hidden" name="year" value="{{ request.args.year }}">
+    <input type="hidden" name="company" value="{{ request.args.company }}">
+    <input type="hidden" name="placed" value="{{ request.args.placed }}">
+    <input type="hidden" name="sort_by" value="{{ request.args.sort_by }}">
+    <input type="hidden" name="type" value="excel">
+    <button type="submit" class="btn btn-outline-primary">Export to Excel</button>
+  </form>
+</div>
+
+<h4>Placed Students</h4>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Student</th>
+      <th>Branch</th>
+      <th>Year</th>
+      <th>Company</th>
+      <th>Position</th>
+      <th>Package (LPA)</th>
+      <th>Resume</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in records %}
+    <tr>
+      <td>{{ r[0] }}</td>
+      <td>{{ r[1] }}</td>
+      <td>{{ r[2] }}</td>
+      <td>{{ r[3] }}</td>
+      <td>{{ r[4] }}</td>
+      <td>{{ r[5] }}</td>
+      <td>
+        {% if r[6] %}
+          <a href="{{ url_for('uploaded_file', filename=r[6]) }}" target="_blank">Download</a>
+        {% else %}
+          N/A
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if unplaced %}
+  <h4 class="mt-4">Unplaced Students</h4>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th><th>Branch</th><th>Year</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in unplaced %}
+      <tr><td>{{ u[0] }}</td><td>{{ u[1] }}</td><td>{{ u[2] }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% endblock %}

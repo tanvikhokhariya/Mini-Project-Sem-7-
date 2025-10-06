@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="POST">
+  <div class="mb-3">
+    <label>Select Student:</label>
+    <select name="student_id" class="form-select">
+      {% for student in students %}
+        <option value="{{ student[0] }}">{{ student[1] }} ({{ student[2] }} - Year {{ student[3] }})</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label>Select Company:</label>
+    <select name="company_id" class="form-select">
+      {% for company in companies %}
+        <option value="{{ company[0] }}">{{ company[1] }} ({{ company[2] }} - {{ company[3] }} LPA)</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Place Student</button>
+</form>
+{% endblock %}
